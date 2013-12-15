@@ -1,2 +1,2 @@
-porr: porr.c auction.c dijkstra.c
-	gcc -o porr auction.c dijkstra.c porr.c -I.
+porr: porr.c graph.c dijkstra.c auction.c
+	gcc -o porr.o porr.c graph.c dijkstra.c auction.c -I.
