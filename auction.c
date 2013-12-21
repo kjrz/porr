@@ -18,14 +18,14 @@ int in_path(int *path, int j) {           // is node already in path
 }
 
 int *auction_algorithm(int **graph) {
-  int terminal,				  // points to current end of path
+  int terminal,                           // points to current end of path
       arg_min, min, j, j_dist;            // utils for finding min in algorithm
 
   int prices[GRAPHSIZE] = {0};            // from source to each node - unknown
   int *path             = init_path();    // from source to target - unknown
 
 	
-  path[0]  = 0;				  // start off with the source node
+  path[0]  = 0;                           // start off with the source node
   terminal = 0;                           // points to current end of path
 	
   while (path[terminal] != TARGET) {
@@ -43,11 +43,11 @@ int *auction_algorithm(int **graph) {
 		                          // choose step
 
     if (prices[path[terminal]] < min) {   // step 1
-      prices[path[terminal]] = min;	  // p := min
+      prices[path[terminal]] = min;       // p := min
       if (terminal != 0)		  // contract P
 	path[terminal--] = INFINITY;
     } else {                              // step 2
-      path[++terminal] = arg_min;	  // extend P
+      path[++terminal] = arg_min;         // extend P
     }
   }
   
