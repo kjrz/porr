@@ -1,21 +1,26 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <malloc.h>
+// WEiTI PORR 13Z
+// JAKUB JARZYNSKI & LUKASZ RUTA
 
 #include "porr.h"
 
-int **allocate_memory() {
-  int i,j, **graph;
+#include <stdio.h>
+#include <stdlib.h>
+#include <malloc.h>
+#include <xmmintrin.h>
 
-  graph = (int**) malloc(GRAPHSIZE * sizeof(int *));
+float **allocate_memory() {
+  int i;
+  float **graph;
+
+  graph = (float**) _mm_malloc(GRAPHSIZE * sizeof(float *), 16);
   for (i = 0; i < GRAPHSIZE; i++) {
-    graph[i] = (int *) malloc(GRAPHSIZE * sizeof(int));
+    graph[i] = (float *) _mm_malloc(GRAPHSIZE * sizeof(float), 16);
   }
   
   return graph;
 }
 
-void draw_connections(int **graph) {
+void draw_connections(float **graph) {
   int i, j, val;
 
   srand(time(NULL));
@@ -38,8 +43,8 @@ void draw_connections(int **graph) {
   }
 }
 
-int **create_graph() {
-  int **graph;
+float **create_graph() {
+  float **graph;
 
   graph = allocate_memory();
   draw_connections(graph);
@@ -47,9 +52,9 @@ int **create_graph() {
   return graph;
 }
 
-void print_graph(int **graph) {
+print_graph(int **graph) {
   int i, j;
-
+  
   for (i = 0; i < GRAPHSIZE; i++) {
     for (j = 0; j < GRAPHSIZE; j++) {
       printf("%i ", graph[i][j]);
@@ -57,4 +62,3 @@ void print_graph(int **graph) {
     printf("\n");
   }
 }
-
