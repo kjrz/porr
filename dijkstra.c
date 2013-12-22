@@ -2,19 +2,6 @@
 // JAKUB JARZYNSKI & LUKASZ RUTA
 
 #include "porr.h"
-#include <stdio.h>
-#include <malloc.h>
-
-int *init_path() {                       // allocate and init path to {INF}
-  int i, *path;
-
-  path = (int *) malloc(GRAPHSIZE * sizeof(int *));
-  for (i = 0; i < GRAPHSIZE; i++) {
-    path[i] = INFINITY;
-  }
-  
-  return path;
-}
 
 int not_empty(int *Q) {
   int i;
@@ -25,7 +12,9 @@ int not_empty(int *Q) {
   return 0;
 }
 
-int find_u(int *Q, int *dist, int *visited) {
+// find node in queue with smallest distance
+// and not yet visited
+int find_u(int *Q, float *dist, int *visited) {
   int i, u, smallest_dist;
 	
   smallest_dist = INFINITY;
@@ -56,11 +45,11 @@ int *read_path(int *previous) {
   return path;
 }
 
-int *dijkstra_algorithm(int **graph) {
+int *dijkstra_algorithm(float **graph) {
   int i, u, v, alt;                      // utility variables
   int Q[GRAPHSIZE] = {0};                // empty Q
 
-  int dist[GRAPHSIZE];
+  float dist[GRAPHSIZE];
   for (i = 0; i < GRAPHSIZE; i++)
     dist[i] = INFINITY;
 	
@@ -82,15 +71,16 @@ int *dijkstra_algorithm(int **graph) {
     for (v = 0; v < GRAPHSIZE; v++) {
       if (!graph[u][v] == INFINITY)      // neighbours only
 	continue;
+
       alt = dist[u] + graph[u][v];       // accumulate shortest distance 
                                          // from source
       if (alt < dist[v]) {
 	dist[v] = alt;                   // keep the shortest distance
                                          // from source to v
 	previous[v]  = u;
-	if (!visited[v])	         // add unvisited v into the Q
-                                         // to be processed
-	  Q[v] = 1;
+
+	if (!visited[v])	         // add unvisited v to Q
+          Q[v] = 1;                      // to be processed
       }
     }
   }
