@@ -9,8 +9,9 @@
 
 #define TARGET    7777
 
-int **create_graph();
+float **create_graph();
 int *init_path();
 
-int *dijkstra_algorithm(int **graph);
-int *auction_algorithm (int **graph);
+int *dijkstra_algorithm(float **graph);
+int *auction_algorithm(float **graph);
+int *auction_algorithm_sse(float **graph);
