@@ -2,42 +2,44 @@
 // JAKUB JARZYNSKI & LUKASZ RUTA
 
 #include "porr.h"
-#include <stdio.h>
-#include <malloc.h>
 
-int in_path(int *path, int j) {           // is node already in path
+// is node already in path
+int in_path(int *path, int j) {
   int i;
 
   for (i = 0; i < GRAPHSIZE; i++) {
-    if (path[i] == INFINITY)
+    if (path[i] == INFINITY)              // end of path reached
       return 0;
-    if (path[i] == j)
+    if (path[i] == j)                     // found node in path
       return 1;
   }
   return 0;
 }
 
-int *auction_algorithm(int **graph) {
-  int terminal,                           // points to current end of path
-      arg_min, min, j, j_dist;            // utils for finding min in algorithm
+int *auction_algorithm(float **graph) {
+  int j, terminal, arg_min, *path;
+  float min, j_dist;
 
-  int prices[GRAPHSIZE] = {0};            // from source to each node - unknown
-  int *path             = init_path();    // from source to target - unknown
-
+  float prices[GRAPHSIZE] = {0};          // init to zeroes
+  path = init_path();                     // init to INFINITIES
 	
   path[0]  = 0;                           // start off with the source node
   terminal = 0;                           // points to current end of path
 	
   while (path[terminal] != TARGET) {
-    min     = INFINITY;                   // finding min in algorithm
+    min     = INFINITY;
     arg_min = 0;
-    for (j = 0; j < GRAPHSIZE; j++) {
-      if (in_path(path, j))
+    for (j = 0; j < GRAPHSIZE; j++) {     // for each neighbour of terminal
+      if (in_path(path, j))               // omit if already in path
 	continue;
-      j_dist = graph[path[terminal]][j] + prices[j];
-      if (j_dist < min) {
-	min = j_dist;
-	arg_min = j;
+
+      j_dist                              // calculate 
+	= graph[path[terminal]][j]        // distance to neighbour
+	+ prices[j];                      // + neighbour price
+
+      if (j_dist < min) {                 // if this is closer than ever,
+	min = j_dist;                     // remember the distance
+	arg_min = j;                      // and the neighbour index
       }
     }
 		                          // choose step
@@ -53,4 +55,3 @@ int *auction_algorithm(int **graph) {
   
   return path;
 }
-
