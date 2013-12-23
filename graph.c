@@ -24,13 +24,14 @@ void draw_connections(float **graph) {
   int i, j, val;
 
   srand(time(NULL));
+
   for (i = 0; i < GRAPHSIZE; i++) {
     for (j = 0; j <= i; j++) {
-      if (i == j) {
+      if (j < i-SURROUND || j ==i) {
 	graph[i][j] = INFINITY;
 	graph[j][i] = INFINITY;
       } else {
-	val = rand()%MAXWEIGHT;
+	val = rand() % MAXWEIGHT;
 	if (val < MINWEIGHT) {
 	  graph[i][j] = INFINITY;
 	  graph[j][i] = INFINITY;
