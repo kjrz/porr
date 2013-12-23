@@ -29,9 +29,22 @@ void print_path(int *path) {
   printf("\n"); 
 }
 
-void print_exec_time(int tic, int toc) {
-  printf("time: %.2f ms\n\n",
-	 (double)(toc - tic) / CLOCKS_PER_SEC * 1000);
+float read_exec_time(int tic, int toc) {
+  float answer;
+  answer = (float) (toc - tic) / CLOCKS_PER_SEC * 1000;
+  return answer;
+}
+
+void print_average_exec_time(float *exec_times) {
+  int i;
+  float sum, avg;
+  
+  sum = 0;
+  for (i = 0; i < RUNS_NO; i++) {
+    sum += exec_times[i];
+  }
+  avg = sum / RUNS_NO;
+  printf("time: %.2f ms\n\n", avg);
 }
 
 void print_cost(int *path, float **graph) {
@@ -48,34 +61,46 @@ void print_cost(int *path, float **graph) {
 
 int main() {
   clock_t tic, toc;
-  float **graph;
-  int *path;
+  float **graph, *exec_times;
+  int i, *path;
 
   graph = create_graph();
 
-  printf("\n::dijkstra::\n");
-  tic = clock();
-  path = dijkstra_algorithm(graph);
-  toc = clock();
-  print_path(path);
-  print_cost(path, graph);
-  print_exec_time(tic, toc);
+  exec_times =
+    (float *) malloc(RUNS_NO * sizeof(float));
 
-  printf("::auction::\n");
-  tic = clock();
-  path = auction_algorithm(graph);
-  toc = clock();
+  printf("\n::dijkstra::\n");                     // run RUNS_NO times
+  for (i = 0; i < RUNS_NO; i++) {                 // to get average exec time
+    tic = clock();                                // start timer
+    path = dijkstra_algorithm(graph);             // run algorithm
+    toc = clock();                                // stop timer
+    exec_times[i] = read_exec_time(tic, toc);     // remember exec time
+  }
+  print_path(path);                               // print result
+  print_cost(path, graph);                        // print result
+  print_average_exec_time(exec_times);            // print average time
+
+  printf("::auction::\n");                        // same for next algorithm
+  for (i = 0; i < RUNS_NO; i++) {
+    tic = clock();
+    path = auction_algorithm(graph);
+    toc = clock();
+    exec_times[i] = read_exec_time(tic, toc);
+  }
   print_path(path);
   print_cost(path, graph);
-  print_exec_time(tic, toc);
+  print_average_exec_time(exec_times);
 
   printf("::auction sse::\n");
-  tic = clock();
-  path = auction_algorithm_sse(graph);
-  toc = clock();
+  for (i = 0; i < RUNS_NO; i++) {
+    tic = clock();
+    path = auction_algorithm_sse(graph);
+    toc = clock();
+    exec_times[i] = read_exec_time(tic, toc);
+  }
   print_path(path);
   print_cost(path, graph);
-  print_exec_time(tic, toc);
+  print_average_exec_time(exec_times);
 
   return 0;
 }
